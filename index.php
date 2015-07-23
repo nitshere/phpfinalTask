@@ -34,33 +34,19 @@
 	ini_set('display_errors',1);
 	ini_set('display_startup_errors',1);
 	error_reporting(-1);
-	require_once('databaseconn.php');
 	
-	$connhandle = dbconnection :: getinstance() -> connhandle;
-	//$connhandle = new mysqli($servername, $username, $password, $dbname);
-	//$_SESSION['dbhandle'] = $connhandle;
-	if ($connhandle -> connect_error) {
-		echo "not connected <br>";
-	} else {
-	//	echo "connected<br>";
-	}
-
-	$query = "SELECT CouponID,WebsiteID,Description from coupon limit 60";
-	$result = $connhandle -> query($query);
 ?>
 <p id = "debugtext"> </p>
 <h2> These are Coupons <br> </h2>
 <p id = "coupons">
 	<?php
-	while($row = $result -> fetch_assoc()) {
-		echo $row['CouponID'] . "&nbsp;&nbsp;&nbsp;&nbsp;" . $row['WebsiteID'] . "&nbsp;&nbsp;&nbsp;&nbsp;" . $row['Description']; 
-		echo "<br><br>";
-	}
+	include_once('controller.php');
+	
 	
 	?>
 </p>
 <?php
-	$query = "select categoryid,name from couponcategories";
+	/*$query = "select categoryid,name from couponcategories";
 	$result = $connhandle -> query($query);
 	$i = 0;
 	while($row = $result -> fetch_assoc()) {
@@ -71,7 +57,7 @@
 	}
 	$_SESSION['categories'] = $category;
 	$_SESSION['categoryid'] = $categoryid;
-	dbconnection :: close();
+	dbconnection :: close();*/
 	//global $stores;
 	//$handle = dbconnection :: getinstance() -> connhandle;
 	/*$query = "select websiteid,websitetitle from website";
@@ -170,7 +156,9 @@
     }
     store = store.replace('&', '%26');
     category = category.replace('&', '%26');
-    xmlhttp.open("GET", "getSearchResults.php?cpntype=" + cpntype + "&store=" + store + "&category=" + category, true);
+    //xmlhttp.open("GET", "getSearchResults.php?cpntype=" + cpntype + "&store=" + store + "&category=" + category, true);
+    xmlhttp.open("GET", "controller.php?cpntype=" + cpntype + "&store=" + store + "&category=" + category + "&todo=search", true);
+
     xmlhttp.send();
 
 
@@ -194,6 +182,7 @@
     	xmlhttp.send();
     	*/
     	var cpntype = document.getElementById("coupontype").value;
+    	var category = document.getElementById("categories").value;
     	if (str.length == 0) { 
         	document.getElementById("txtHint").innerHTML = "";
         	return;
@@ -204,7 +193,9 @@
                 	document.getElementById("txtHint").innerHTML = xmlhttp.responseText;
             	}
         	}
-        	xmlhttp.open("GET", "gethints.php?q=" + str + "&cpntype=" + cpntype, true);
+        	//q = q.replace('&', '%26');
+    		//category = category.replace('&', '%26');
+        	xmlhttp.open("GET", "controller.php?q=" + str + "&cpntype=" + cpntype + "&category=" + category + "&todo=storehint", true);
         	xmlhttp.send();
     	}
 	} 
@@ -231,7 +222,7 @@
     	/*var url = "getcathints.php?q=" + str + "&store=" + store + "&cpntype=" + cpntype;
     	document.getElementById("debugtext").innerHTML=url;*/
 
-    	xmlhttp.open("GET","getcathints.php?q=" + str + "&store=" + store + "&cpntype=" + cpntype,true);
+    	xmlhttp.open("GET","controller.php?q=" + str + "&store=" + store + "&cpntype=" + cpntype + "&todo=categoryhint",true);
     	xmlhttp.send();
 	}   
 
